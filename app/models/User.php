@@ -35,10 +35,11 @@
         {
             $result = new Illuminate\Support\Collection;
 		
-		    foreach ($this->participants->load('stats') as $key => $value) {
-			    $result->push($value->stats);
-		    }
-		    return $result;
+	    foreach ($this->participants->load('stats') as $key => $value) {
+		$result->push($value->stats);
+	    }
+	
+	    return $result;
         }
 
         public function matches()
