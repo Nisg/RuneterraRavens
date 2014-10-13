@@ -42,22 +42,25 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
     public function getAverageStat($fields, $max = PHP_INT_MAX) 
     {
-        $stats = $this->stats()->toArray();
-        $retme = array();
-        foreach ($fields as $field) {
-            $count = 0;
-            foreach ($stats as $key => $value) {
-                if (array_key_exists($field, $value) === false)
-                    continue;
-                if ($key === $max) {
-                    $count /= $max;
-                    break;
+        if ($max === PHP_INT_MAX)
+            $max = count($stats);
+        $averages = array_fill_keys($fields, 0);
+
+        foreach ($this->stats as $stat_key=>$stat_value) {
+            if ($stat_key === $max) {
+                //Calculate the averages
+                foreach ($fields as $field_key => $field_value) {
+                    $averages[$field_value]/=$max;
                 }
-                $count += $value[$field];
+                break;
             }
-            $retme[$field] = round($count);
+            foreach ($fields as $field_key => $field_value) {
+                if (isset($stat_value[$field_value]))
+                    $averages[$field_value]+=$stat_value[$field_value];
+            }
         }
-        return $retme;
+
+        return $averages;
     }
 
 }
