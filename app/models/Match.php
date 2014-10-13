@@ -19,4 +19,9 @@ class Match extends \Eloquent {
 	{
 		return $this->hasMany('TimelineFrame','matchId','matchId')->orderBy('frameId','asc');
 	}
+	
+	public function teams() 
+	{
+		return $this->hasMany('Team','matchId','matchId')->orderBy('teamId','asc');
+	}
 }
