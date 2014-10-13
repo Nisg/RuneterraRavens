@@ -33,7 +33,12 @@
 
         public function stats()
         {
-            return $this -> participants() -> join("participants_stats", "participants.id", "=", "participants_stats.participantTableId") -> orderBy("matchId", "desc");
+            $result = new Illuminate\Support\Collection;
+		
+		    foreach ($this->participants->load('stats') as $key => $value) {
+			    $result->push($value->stats);
+		    }
+		    return $result;
         }
 
         public function matches()
