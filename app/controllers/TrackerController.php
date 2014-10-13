@@ -5,7 +5,7 @@
 
         function index()
         {
-            return View::make('tracker.tracker', array('users' => User::all()));
+            return View::make('tracker.index', array('users' => User::all()));
         }
 
         function show($id)
