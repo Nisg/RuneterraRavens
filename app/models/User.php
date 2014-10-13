@@ -1,51 +1,64 @@
 <?php
 
-    use Illuminate\Auth\UserTrait;
-    use Illuminate\Auth\UserInterface;
-    use Illuminate\Auth\Reminders\RemindableTrait;
-    use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Auth\UserTrait;
+use Illuminate\Auth\UserInterface;
+use Illuminate\Auth\Reminders\RemindableTrait;
+use Illuminate\Auth\Reminders\RemindableInterface;
 
-    class User extends Eloquent implements UserInterface, RemindableInterface
-    {
+class User extends Eloquent implements UserInterface, RemindableInterface {
 
-        use UserTrait, RemindableTrait;
+    use UserTrait,
+        RemindableTrait;
 
-        /**
-         * The database table used by the model.
-         *
-         * @var string
-         */
-        protected $table = 'users';
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
+    protected $primaryKey = 'summonerId';
 
-        protected $primaryKey = 'summonerId';
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = array('password', 'remember_token');
 
-        /**
-         * The attributes excluded from the model's JSON form.
-         *
-         * @var array
-         */
-        protected $hidden = array('password', 'remember_token');
-
-        public function participants()
-        {
-            return $this -> hasMany('Participant', 'summonerId', 'summonerId');
-        }
-
-        public function stats()
-        {
-            $result = new Illuminate\Support\Collection;
-		
-	    foreach ($this->participants->load('stats') as $key => $value) {
-		$result->push($value->stats);
-	    }
-	
-	    return $result;
-        }
-
-        public function matches()
-        {
-            return $this -> hasManyThrough('Match', 'Participant', 'summonerId', 'matchId') -> orderBy('matchId', 'desc');
-            //	return $this->manyThroughMany('Match','Participant','summonerId','matchId','matchId');
-        }
-
+    public function participants() {
+        return $this->hasMany('Participant', 'summonerId', 'summonerId')->orderBy('matchId', 'desc');
     }
+
+    public function stats() {
+        $result = new Illuminate\Support\Collection;
+
+        foreach ($this->participants->load('stats') as $key => $value) {
+            $result->push($value->stats);
+        }
+        return $result;
+    }
+
+    public function matches() {
+        return $this->hasManyThrough('Match', 'Participant', 'summonerId', 'matchId')->orderBy('matchId', 'desc');
+    }
+
+    public function getAverageStat($fields, $max = PHP_INT_MAX) {
+        $stats = $this->stats()->toArray();
+        $retme = array();
+        foreach ($fields as $field) {
+            $count = 0;
+            foreach ($stats as $key => $value) {
+                if (array_key_exists($field, $value) === false)
+                    continue;
+                if ($key === $max) {
+                    $count /= $max;
+                    break;
+                }
+                $count += $value[$field];
+            }
+            $retme[$field] = round($count);
+        }
+        return $retme;
+    }
+
+}
