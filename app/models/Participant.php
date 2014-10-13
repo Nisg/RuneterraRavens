@@ -37,6 +37,11 @@ class Participant extends \Eloquent {
 	{
 		return $this->hasManyThrough('TimelineFrame','Match','matchId','matchId');
 	}
+	
+	public function team()
+	{
+		return $this->hasManyThrough('Team','Match','matchId','matchId')->where('teamId','=',$this->teamId);
+	}
 
 	public function events() {
 		return $this->hasManyThrough('TimelineEvent','TimelineFrame','matchId','timelineFrameId')
