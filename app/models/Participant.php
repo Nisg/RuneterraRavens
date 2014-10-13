@@ -40,7 +40,7 @@ class Participant extends \Eloquent {
 	
 	public function team()
 	{
-		return $this->hasManyThrough('Team','Match','matchId','matchId')->where('teamId','=',$this->teamId);
+		return $this->hasOne('Team','matchId','matchId')->where('teamId','=',$this->teamId);
 	}
 
 	public function events() {
