@@ -25,24 +25,23 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
      */
     protected $hidden = array('password', 'remember_token');
 
-    public function participants() {
+    public function participants() 
+    {
         return $this->hasMany('Participant', 'summonerId', 'summonerId')->orderBy('matchId', 'desc');
     }
 
-    public function stats() {
-        $result = new Illuminate\Support\Collection;
-
-        foreach ($this->participants->load('stats') as $key => $value) {
-            $result->push($value->stats);
-        }
-        return $result;
+    public function stats() 
+    {
+        return $this->participants()->join("participants_stats", "participants.id", "=", "participants_stats.participantTableId")->orderBy("matchId", "desc");
     }
 
-    public function matches() {
+    public function matches() 
+    {
         return $this->hasManyThrough('Match', 'Participant', 'summonerId', 'matchId')->orderBy('matchId', 'desc');
     }
 
-    public function getAverageStat($fields, $max = PHP_INT_MAX) {
+    public function getAverageStat($fields, $max = PHP_INT_MAX) 
+    {
         $stats = $this->stats()->toArray();
         $retme = array();
         foreach ($fields as $field) {
