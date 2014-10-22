@@ -1,9 +1,9 @@
 <?php 
 
-namespace Leona\Presenter;
+namespace App\Presenter;
 use Illuminate\Pagination\Presenter as Presenter;
 
-class ZurbPresenter extends Presenter {
+class LeonaPresenter extends Presenter {
 
     public function getActivePageWrapper($text)
     {

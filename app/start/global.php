@@ -18,6 +18,8 @@ ClassLoader::addDirectories(array(
 	app_path().'/models',
 	app_path().'/database/seeds',
 
+	app_path().'/leona',
+
 ));
 
 /*
@@ -49,6 +51,8 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+
+	//return View::make('error');
 });
 
 /*
@@ -79,3 +83,8 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+App::singleton('DataDragon', function()
+{
+    return new DataDragon();
+});

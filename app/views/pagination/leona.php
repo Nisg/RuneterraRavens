@@ -1,5 +1,5 @@
 <?php
-	$presenter = new Leona\Presenter\ZurbPresenter($paginator);
+	$presenter = new App\Presenter\LeonaPresenter($paginator);
 ?>
 
 <?php if ($paginator->getLastPage() > 1): ?>
