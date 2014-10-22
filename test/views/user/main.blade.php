@@ -5,8 +5,6 @@
 @stop
 
 @section('head')
-<script>var current_page = "{{route('users.update', $user->summonerId)}}";</script>
-
 {{ HTML::style('css/loading_modal.css') }}
 {{ HTML::script('js/spin.js') }}
 {{ HTML::script('js/loading_modal.js') }}
