@@ -1,7 +1,7 @@
 @extends('layout.newmaster')
 
 @section('title')
-{{$user->summonerName}}
+ERROR
 @stop
 
 @section('head')
@@ -12,7 +12,7 @@
 @stop
 
 @section('content')
-Click to update data
+WE DO NOT TRACK ANY USER WITH ID {{$summonerId}} !!
 <div id="modal"></div>
 <div id="info"></div>
 @stop
