@@ -26,4 +26,8 @@ function updatePage(data) {
  * TODO;
  * make the updatePage function change data on the page, and not just put some new stuff there...
  *
+<<<<<<< HEAD
  */
+=======
+ */
+>>>>>>> bcabd287f420d4386140052c9c59b7b87f38f756
