@@ -3,6 +3,8 @@
 class Participant extends \Eloquent {
 	protected $table = "participants";
 
+	protected $fillable = array('matchId','summonerId','summonerName','championId','spell1Id','spell2Id','teamId','role','lane');
+
 	protected $primaryKey = 'id';
 
 	// public function getForeignKey() 
@@ -10,10 +12,10 @@ class Participant extends \Eloquent {
 	// 	return "matchId";
 	// }
 
-	public function getKeyName(){
-		//Same as changing the primaryKey to matchId - not the greatest of fixes
-		return 'matchId';
-	}
+	// public function getKeyName(){
+	// 	//Same as changing the primaryKey to matchId - not the greatest of fixes
+	// 	return 'matchId';
+	// }
 
 	public function match()
 	{
@@ -33,25 +35,4 @@ class Participant extends \Eloquent {
 		return $this->hasOne('ParticipantStat','participantTableId','id');
 	}
 
-	public function timeline()
-	{
-		return $this->hasManyThrough('TimelineFrame','Match','matchId','matchId');
-	}
-	
-	public function team()
-	{
-		return $this->hasOne('Team','matchId','matchId')->where('teamId','=',$this->teamId);
-	}
-
-	public function events() {
-		return $this->hasManyThrough('TimelineEvent','TimelineFrame','matchId','timelineFrameId')
-			->where(function ($query) {
-				$query->orWhere('participantId','=',$this->participantId);
-				$query->orWhere('killerId','=',$this->participantId);
-				$query->orWhere('victimId','=',$this->participantId);
-				$query->orWhereHas('assistants', function($query) {
-					$query->where('participantId','=',$this->participantId);
-				});
-			});
-	}
 }

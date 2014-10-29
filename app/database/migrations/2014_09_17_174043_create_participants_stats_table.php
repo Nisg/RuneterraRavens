@@ -58,7 +58,7 @@ class CreateParticipantsStatsTable extends Migration {
 			$table->integer('physicalDamageTaken')->unsigned();
 			$table->integer('quadraKills')->unsigned();
 			$table->integer('sightWardsBoughtInGame')->unsigned();
-			$table->integer('teamObjective')->unsigned();
+			$table->integer('teamObjective')->nullable()->unsigned();
 			$table->integer('totalDamageDealt')->unsigned();
 			$table->integer('totalDamageDealtToChampions')->unsigned();
 			$table->integer('totalDamageTaken')->unsigned();

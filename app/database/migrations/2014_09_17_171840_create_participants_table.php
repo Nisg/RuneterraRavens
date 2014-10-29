@@ -16,9 +16,7 @@ class CreateParticipantsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->bigInteger('matchId')->unsigned()->index();
-			$table->integer('participantId')->unsigned();
 			$table->integer('summonerId')->unsigned()->nullable()->index();
-			$table->string('summonerName')->nullable()->index();
 			$table->smallInteger('championId')->unsigned();
 			$table->smallInteger('spell1Id')->unsigned();
 			$table->smallInteger('spell2Id')->unsigned();
@@ -26,7 +24,6 @@ class CreateParticipantsTable extends Migration {
 			$table->string('role')->index();
 			$table->string('lane')->index();
 			$table->timestamps();
-			$table->unique(array('matchId','participantId'));
 			$table->engine = 'InnoDB';
 		});
 	}

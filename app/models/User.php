@@ -7,60 +7,51 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
-    use UserTrait,
-        RemindableTrait;
+	use UserTrait, RemindableTrait;
 
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
-    protected $primaryKey = 'summonerId';
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'users';
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = array('password', 'remember_token');
+	protected $primaryKey = 'summonerId';
 
-    public function participants() 
+	/**
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
+	protected $hidden = array('password', 'remember_token');
+
+	public function participants() 
+	{
+		return $this->hasMany('Participant','summonerId','summonerId')->orderBy('matchId','desc');
+	}
+
+	public function stats()
+	{
+		return $this->hasManyThrough('ParticipantStat','Participant','summonerId','participantTableId');
+		return $this->participants()->join("participants_stats", "participants.id", "=", "participants_stats.participantTableId");
+	}
+
+	public function matches() 
+	{
+		return Match::join("participants","participants.matchId", "=", "matches.matchId")->where('participants.summonerId','=',$this->summonerId);
+	//	return $this->hasManyThrough('Match','Participant','matchId','summonerId')->orderBy('matchId', 'desc');
+	}
+
+    public function getAverageStat($fields) 
     {
-        return $this->hasMany('Participant', 'summonerId', 'summonerId')->orderBy('matchId', 'desc');
-    }
-
-    public function stats() 
-    {
-        return $this->participants()->join("participants_stats", "participants.id", "=", "participants_stats.participantTableId")->orderBy("matchId", "desc");
-    }
-
-    public function matches() 
-    {
-        return $this->hasManyThrough('Match', 'Participant', 'summonerId', 'matchId')->orderBy('matchId', 'desc');
-    }
-
-    public function getAverageStat($fields, $max = PHP_INT_MAX) 
-    {
-        if ($max === PHP_INT_MAX)
-            $max = count($this->stats) - 1;
         $averages = array_fill_keys($fields, 0);
 
-        foreach ($this->stats as $stat_key=>$stat_value) {
-            if ($stat_key === $max) {
-                //Calculate the averages
-                foreach ($fields as $field_key => $field_value) {
-                    $averages[$field_value]/=$max;
-                }
-                break;
-            }
-            foreach ($fields as $field_key => $field_value) {
-                if (isset($stat_value[$field_value]))
-                    $averages[$field_value]+=$stat_value[$field_value];
-            }
+        foreach ($fields as $field){
+        	$averages[$field]=round($this->stats()->avg($field),2);
         }
 
         return $averages;
+
     }
 
 }

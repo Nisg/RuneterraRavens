@@ -17,6 +17,7 @@ class CreateUsersTable extends Migration {
 			$table->integer('summonerId')->unsigned()->primary();
 			$table->string('summonerName');
 			$table->string('region',4);
+			$table->float('ravenscore')->nullable();
 			$table->timestamps();
 			$table->engine = 'InnoDB';
 		});

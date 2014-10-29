@@ -14,7 +14,7 @@ class CreateMatchesTable extends Migration {
 	{
 		Schema::create('matches', function(Blueprint $table)
 		{
-			$table->bigInteger('matchId')->unsigned()->primary();
+			$table->bigInteger('matchId')->unsigned();
 			$table->bigInteger('matchCreation')->unsigned();
 			$table->bigInteger('matchDuration')->unsigned();
 			$table->smallInteger('mapId')->unsigned();
@@ -24,8 +24,9 @@ class CreateMatchesTable extends Migration {
 			$table->string('queueType');
 			$table->string('region', 4);
 			$table->string('season');
-			$table->integer('frameInterval')->unsigned();
+			$table->integer('frameInterval')->unsigned()->nullable();
 			$table->timestamps();
+			$table->primary(array('matchId', 'region'));
 			$table->engine = 'InnoDB';
 		});
 	}

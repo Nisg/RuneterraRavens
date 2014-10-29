@@ -3,6 +3,8 @@
 class Match extends \Eloquent {
 	protected $table="matches";
 
+	protected $fillable=array('matchId','matchCreation','matchDuration','mapId','matchMode','matchType','matchVersion','queueType','region','season');
+
 	protected $primaryKey = 'matchId';
 
 	public function participants() 
@@ -13,15 +15,5 @@ class Match extends \Eloquent {
 	public function users()
 	{
 		return $this->hasManyThrough('User','Participant','summonerIds','matchId');
-	}
-
-	public function timeline()
-	{
-		return $this->hasMany('TimelineFrame','matchId','matchId')->orderBy('frameId','asc');
-	}
-	
-	public function teams() 
-	{
-		return $this->hasMany('Team','matchId','matchId')->orderBy('teamId','asc');
 	}
 }
